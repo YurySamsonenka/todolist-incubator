@@ -1,20 +1,20 @@
 import React from 'react';
-import { Task } from './App';
+import { FilterValues, Task } from './App';
 import { Button } from './Button';
 
 type Props = {
 	title: string
 	tasks: Task[]
-	data?: string
+	removeTask: (taskId: number) => void
+	changeFilter: (filter: FilterValues) => void
 }
 
-export const Todolist = ({ title, tasks, data }: Props) => {
+export const Todolist = ({ title, tasks, removeTask, changeFilter }: Props) => {
 	return (
 		<div>
 			<h3>{title}</h3>
 			<div>
 				<input />
-				<button>+</button>
 				<Button title={'+'} />
 			</div>
 			{tasks.length === 0 ? (
@@ -26,17 +26,17 @@ export const Todolist = ({ title, tasks, data }: Props) => {
 							<li key={t.id}>
 								<input type="checkbox" checked={t.isDone} />
 								<span>{t.title}</span>
+								<Button title={'x'} onClick={() => removeTask(t.id)} />
 							</li>
 						);
 					})}
 				</ul>
 			)}
 			<div>
-				<Button title={'All'} />
-				<Button title={'Active'} />
-				<Button title={'Completed'} />
+				<Button title={'All'} onClick={()=>{changeFilter("all")}} />
+				<Button title={'Active'} onClick={()=>{changeFilter("active")}}/>
+				<Button title={'Completed'} onClick={()=>{changeFilter("completed")}}/>
 			</div>
-			<div>{data}</div>
 		</div>
 	);
 };
