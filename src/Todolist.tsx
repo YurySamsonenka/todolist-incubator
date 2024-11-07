@@ -5,11 +5,13 @@ import { Button } from './Button';
 type Props = {
 	title: string
 	tasks: Task[]
-	removeTask: (taskId: string) => void
-	changeFilter: (filter: FilterValues) => void
-	addTask: (title: string) => void
-	changeTaskStatus: (taskId: string, taskStatus: boolean) => void
+	todolistId: string
+	removeTask: (taskId: string, todolistId: string) => void
+	changeFilter: (filter: FilterValues, todolistId: string) => void
+	addTask: (title: string, todolistId: string) => void
+	changeTaskStatus: (taskId: string, taskStatus: boolean, todolistId: string) => void
 	filter: FilterValues
+	removeTodolist: (todolistId: string) => void
 }
 
 export const Todolist = ({
@@ -20,13 +22,15 @@ export const Todolist = ({
 	addTask,
 	changeTaskStatus,
 	filter,
+	todolistId,
+	removeTodolist,
 }: Props) => {
 	const [taskTitle, setTaskTitle] = useState('');
 	const [error, setError] = useState<string | null>(null);
 
 	const addTaskHandler = () => {
 		if (taskTitle.trim() !== '') {
-			addTask(taskTitle.trim());
+			addTask(taskTitle.trim(), todolistId);
 			setTaskTitle('');
 		} else {
 			setError('Title is required');
@@ -45,12 +49,19 @@ export const Todolist = ({
 	};
 
 	const changeFilterTasksHandler = (filter: FilterValues) => {
-		changeFilter(filter);
+		changeFilter(filter, todolistId);
+	};
+
+	const removeTodolistHandler = () => {
+		removeTodolist(todolistId);
 	};
 
 	return (
 		<div>
-			<h3>{title}</h3>
+			<div className={'todolist-title-container'}>
+				<h3>{title}</h3>
+				<Button title={'x'} onClick={removeTodolistHandler} />
+			</div>
 			<div>
 				<input className={error ? 'error' : ''} value={taskTitle}
 					onChange={changeTaskTitleHandler}
@@ -64,12 +75,12 @@ export const Todolist = ({
 				<ul>
 					{tasks.map(t => {
 						const removeTaskHandler = () => {
-							removeTask(t.id);
+							removeTask(t.id, todolistId);
 						};
 
 						const changeTaskStatusHandler = (e: ChangeEvent<HTMLInputElement>) => {
 							const newStatusValue = e.currentTarget.checked;
-							changeTaskStatus(t.id, newStatusValue);
+							changeTaskStatus(t.id, newStatusValue, todolistId);
 						};
 
 						return (
