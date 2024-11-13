@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './App.css';
 import { Todolist } from './Todolist';
 import { v1 } from 'uuid';
+import { AddItemForm } from './AddItemForm';
 
 export type TasksStateType = {
 	[key: string]: Task[]
@@ -40,7 +41,7 @@ function App() {
 			{ id: v1(), title: 'Rest API', isDone: true },
 			{ id: v1(), title: 'GraphQL', isDone: false },
 		],
-	})
+	});
 
 	const removeTask = (taskId: string, todolistId: string) => {
 		setTasks({ ...tasks, [todolistId]: tasks[todolistId].filter(t => t.id !== taskId) });
@@ -78,8 +79,29 @@ function App() {
 		setTasks({ ...tasks });
 	};
 
+	const addTodolist = (title: string) => {
+		const todolistId = v1();
+		const newTodolist: TodolistType = { id: todolistId, title, filter: 'all' };
+		setTodolists([newTodolist, ...todolists]);
+		setTasks({ ...tasks, [todolistId]: [] });
+	};
+
+	const updateTask = (todolistId: string, taskId: string, title: string) => {
+		const newTodolistTasks = {
+			...tasks,
+			[todolistId]: tasks[todolistId].map(t => (t.id === taskId ? { ...t, title } : t)),
+		};
+		setTasks(newTodolistTasks);
+	};
+
+	const updateTodolist = (todolistId: string, title: string) => {
+		const newTodolists = todolists.map(tl => (tl.id === todolistId ? { ...tl, title } : tl));
+		setTodolists(newTodolists);
+	};
+
 	return (
 		<div className="App">
+			<AddItemForm addItem={addTodolist} />
 			{todolists.map(tl => {
 				const allTodolistTasks = tasks[tl.id];
 				let tasksForTodolist = allTodolistTasks;
@@ -104,6 +126,8 @@ function App() {
 						changeTaskStatus={changeTaskStatus}
 						filter={tl.filter}
 						removeTodolist={removeTodolist}
+						updateTask={updateTask}
+						updateTodolist={updateTodolist}
 					/>
 				);
 			})}
