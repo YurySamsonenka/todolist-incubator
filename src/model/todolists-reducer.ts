@@ -1,5 +1,5 @@
 import { v1 } from 'uuid';
-import { FilterValues, TodolistType } from '../AppWithReducers';
+import { FilterValues, TodolistType } from '../AppWithRedux';
 
 const initialState: TodolistType[] = [];
 
@@ -30,7 +30,6 @@ export const todolistsReducer = (state: TodolistType[] = initialState,
 				? { ...tl, filter: action.payload.filter }
 				: tl);
 		}
-
 		default:
 			return state;
 	}
