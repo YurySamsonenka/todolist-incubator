@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/todolist-incubator/static/css/main.f200ba62.css",
+    "main.js": "/todolist-incubator/static/js/main.ece6a19a.js",
+    "index.html": "/todolist-incubator/index.html",
+    "main.f200ba62.css.map": "/todolist-incubator/static/css/main.f200ba62.css.map",
+    "main.ece6a19a.js.map": "/todolist-incubator/static/js/main.ece6a19a.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.f200ba62.css",
+    "static/js/main.ece6a19a.js"
+  ]
+}
