@@ -1,4 +1,4 @@
-import { TasksStateType } from '../app/App';
+import { Task, TasksStateType } from '../app/App';
 import { v1 } from 'uuid';
 import { AddTodolistActionType, RemoveTodolistActionType } from './todolists-reducer';
 
@@ -15,7 +15,7 @@ export const tasksReducer = (state: TasksStateType = initialState,
 			};
 		}
 		case 'ADD-TASK' : {
-			const newTask = {
+			const newTask: Task = {
 				id: v1(),
 				title: action.payload.title,
 				isDone: false,
@@ -26,17 +26,20 @@ export const tasksReducer = (state: TasksStateType = initialState,
 				[action.payload.todolistId]: [newTask, ...state[action.payload.todolistId]],
 			};
 		}
-		case 'CHANGE-TASK-STATUS':
+		case 'CHANGE-TASK-STATUS': {
 			return {
 				...state,
-				[action.payload.todolistId]: [...state[action.payload.todolistId].map(t => t.id ===
-				action.payload.taskId ? { ...t, isDone: action.payload.taskStatus } : t)],
+				[action.payload.todolistId]: state[action.payload.todolistId].map(t => t.id ===
+				action.payload.taskId ? {
+					...t, isDone: action.payload.isDone,
+				} : t),
 			};
+		}
 		case 'CHANGE-TASK-TITLE':
 			return {
 				...state,
-				[action.payload.todolistId]: [...state[action.payload.todolistId].map(t => t.id ===
-				action.payload.taskId ? { ...t, title: action.payload.title } : t)],
+				[action.payload.todolistId]: state[action.payload.todolistId].map(t => t.id ===
+				action.payload.taskId ? { ...t, title: action.payload.title } : t),
 			};
 		case 'ADD-TODOLIST':
 			return { ...state, [action.payload.todolistId]: [] };
@@ -60,7 +63,7 @@ export const addTaskAC = (payload: { todolistId: string; title: string }) => {
 export const changeTaskStatusAC = (payload: {
 	todolistId: string;
 	taskId: string,
-	taskStatus: boolean
+	isDone: boolean
 }) => {
 	return { type: 'CHANGE-TASK-STATUS', payload } as const;
 };

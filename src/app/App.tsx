@@ -1,7 +1,6 @@
-import React, { useReducer, useState } from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import { Todolist } from '../Todolist';
-import { v1 } from 'uuid';
 import { AddItemForm } from '../AddItemForm';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -14,8 +13,8 @@ import { MenuButton } from '../MenuButton';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Switch from '@mui/material/Switch';
 import CssBaseline from '@mui/material/CssBaseline';
-import { addTodolistAC, changeTodolistFilterAC, changeTodolistTitleAC, removeTodolistAC, todolistsReducer } from '../model/todolists-reducer';
-import { addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC, tasksReducer } from '../model/tasks-reducer';
+import { addTodolistAC, changeTodolistFilterAC, changeTodolistTitleAC, removeTodolistAC } from '../model/todolists-reducer';
+import { addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC } from '../model/tasks-reducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from './store';
 
@@ -40,32 +39,24 @@ export type TodolistType = {
 type ThemeMode = 'dark' | 'light'
 
 function App() {
+	const todolists = useSelector<RootState, TodolistType[]>(state => state.todolists);
+	const tasks = useSelector<RootState, TasksStateType>(state => state.tasks);
+
+	const dispatch = useDispatch();
+
 	const [themeMode, setThemeMode] = useState<ThemeMode>('light');
 
 	const theme = createTheme({
 		palette: {
 			mode: themeMode === 'light' ? 'light' : 'dark',
 			primary: {
-				main: '#ef6c00',
+				main: '#087EA4',
 			},
 		},
 	});
 
-	const changeModeHandler = () => {
-		setThemeMode(themeMode === 'light' ? 'dark' : 'light');
-	};
-
-	const todolists = useSelector<RootState, TodolistType[]>(state => state.todolists);
-	const tasks = useSelector<RootState, TasksStateType>(state => state.tasks);
-
-	const dispatch = useDispatch();
-
 	const removeTask = (taskId: string, todolistId: string) => {
 		dispatch(removeTaskAC({ taskId, todolistId }));
-	};
-
-	const changeFilter = (filter: FilterValues, todolistId: string) => {
-		dispatch(changeTodolistFilterAC({ filter, id: todolistId }));
 	};
 
 	const addTask = (title: string, todolistId: string) => {
@@ -73,27 +64,31 @@ function App() {
 	};
 
 	const changeTaskStatus = (taskId: string, taskStatus: boolean, todolistId: string) => {
-		dispatch(changeTaskStatusAC({ taskId, taskStatus, todolistId }));
-	};
-
-	const removeTodolist = (todolistId: string) => {
-		const action = removeTodolistAC(todolistId);
-		dispatch(action);
-		dispatch(action);
-	};
-
-	const addTodolist = (title: string) => {
-		const action = addTodolistAC(title);
-		dispatch(action);
-		dispatch(action);
+		dispatch(changeTaskStatusAC({ taskId, isDone: taskStatus, todolistId }));
 	};
 
 	const updateTask = (todolistId: string, taskId: string, title: string) => {
 		dispatch(changeTaskTitleAC({ todolistId, title, taskId }));
 	};
 
-	const updateTodolist = (todolistId: string, title: string) => {
-		dispatch(changeTodolistTitleAC({ id: todolistId, title }));
+	const changeFilter = (filter: FilterValues, id: string) => {
+		dispatch(changeTodolistFilterAC({ filter, id }));
+	};
+
+	const removeTodolist = (todolistId: string) => {
+		dispatch(removeTodolistAC(todolistId));
+	};
+
+	const addTodolist = (title: string) => {
+		dispatch(addTodolistAC(title));
+	};
+
+	const updateTodolist = (id: string, title: string) => {
+		dispatch(changeTodolistTitleAC({ id, title }));
+	};
+
+	const changeModeHandler = () => {
+		setThemeMode(themeMode === 'light' ? 'dark' : 'light');
 	};
 
 	return (
@@ -131,7 +126,7 @@ function App() {
 
 						return (
 							<Grid key={tl.id}>
-								<Paper sx={{p: '0 20px 20px 20px'}}>
+								<Paper sx={{ p: '0 20px 20px 20px' }}>
 									<Todolist
 										key={tl.id}
 										todolistId={tl.id}

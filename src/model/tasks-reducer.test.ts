@@ -54,7 +54,7 @@ test('status of specified task should be changed', () => {
 		startState,
 		changeTaskStatusAC({
 			taskId: '2',
-			taskStatus: false,
+			isDone: false,
 			todolistId: 'todolistId2',
 		}),
 	);
