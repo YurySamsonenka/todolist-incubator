@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './App.css';
 import { Todolist } from '../Todolist';
 import { AddItemForm } from '../AddItemForm';
@@ -10,13 +10,15 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid2';
 import Paper from '@mui/material/Paper';
 import { MenuButton } from '../MenuButton';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { ThemeProvider } from '@mui/material/styles';
 import Switch from '@mui/material/Switch';
 import CssBaseline from '@mui/material/CssBaseline';
 import { addTodolistAC, changeTodolistFilterAC, changeTodolistTitleAC, removeTodolistAC } from '../model/todolists-reducer';
 import { addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC } from '../model/tasks-reducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from './store';
+import { getTheme } from '../common/theme/theme';
+import { changeThemeAC } from './app-reducer';
 
 export type TasksStateType = {
 	[key: string]: Task[]
@@ -41,19 +43,11 @@ type ThemeMode = 'dark' | 'light'
 function App() {
 	const todolists = useSelector<RootState, TodolistType[]>(state => state.todolists);
 	const tasks = useSelector<RootState, TasksStateType>(state => state.tasks);
+	const themeMode = useSelector<RootState, ThemeMode>(state => state.app.themeMode);
 
 	const dispatch = useDispatch();
 
-	const [themeMode, setThemeMode] = useState<ThemeMode>('light');
-
-	const theme = createTheme({
-		palette: {
-			mode: themeMode === 'light' ? 'light' : 'dark',
-			primary: {
-				main: '#087EA4',
-			},
-		},
-	});
+	const theme = getTheme(themeMode);
 
 	const removeTask = (taskId: string, todolistId: string) => {
 		dispatch(removeTaskAC({ taskId, todolistId }));
@@ -88,7 +82,7 @@ function App() {
 	};
 
 	const changeModeHandler = () => {
-		setThemeMode(themeMode === 'light' ? 'dark' : 'light');
+		dispatch(changeThemeAC(themeMode === 'light' ? 'dark' : 'light'))
 	};
 
 	return (
