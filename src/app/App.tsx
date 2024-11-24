@@ -1,10 +1,10 @@
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import { useSelector } from 'react-redux';
-import { RootState } from './store';
 import { getTheme } from '../common/theme/theme';
 import Header from '../common/components/Header/Header';
 import { Main } from './Main';
+import { useAppSelector } from '../common/hooks/useAppSelector';
+import { selectThemeMode } from './appSelectors';
 
 export type TasksStateType = {
 	[key: string]: TaskType[]
@@ -24,10 +24,8 @@ export type TodolistType = {
 	filter: FilterValues
 }
 
-type ThemeMode = 'dark' | 'light'
-
 export const App = () => {
-	const themeMode = useSelector<RootState, ThemeMode>(state => state.app.themeMode);
+	const themeMode = useAppSelector(selectThemeMode);
 
 	return (
 		<ThemeProvider theme={getTheme(themeMode)}>

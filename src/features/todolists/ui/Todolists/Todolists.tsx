@@ -1,15 +1,15 @@
 import { Todolist } from './Todolist/Todolist';
 import { addTaskAC } from '../../model/tasks-reducer';
-import { TodolistType } from '../../../../app/App';
-import { useDispatch, useSelector } from 'react-redux';
 import Paper from '@mui/material/Paper';
-import { RootState } from '../../../../app/store';
 import Grid from '@mui/material/Grid2';
+import { useAppDispatch } from '../../../../common/hooks/useAppDispatch';
+import { useAppSelector } from '../../../../common/hooks/useAppSelector';
+import { selectTodolists } from '../../model/todolistsSelectors';
 
 const Todolists = () => {
-	const todolists = useSelector<RootState, TodolistType[]>(state => state.todolists);
+	const todolists = useAppSelector(selectTodolists);
 
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 
 	const addTask = (title: string, todolistId: string) => {
 		dispatch(addTaskAC({ title, todolistId }));
