@@ -1,4 +1,4 @@
-import { Task, TasksStateType } from '../app/App';
+import { TaskType, TasksStateType } from '../app/App';
 import { v1 } from 'uuid';
 import { AddTodolistActionType, RemoveTodolistActionType } from './todolists-reducer';
 
@@ -15,7 +15,7 @@ export const tasksReducer = (state: TasksStateType = initialState,
 			};
 		}
 		case 'ADD-TASK' : {
-			const newTask: Task = {
+			const newTask: TaskType = {
 				id: v1(),
 				title: action.payload.title,
 				isDone: false,

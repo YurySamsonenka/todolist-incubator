@@ -8,10 +8,10 @@ import Header from '../Header';
 import { Main } from '../Main';
 
 export type TasksStateType = {
-	[key: string]: Task[]
+	[key: string]: TaskType[]
 }
 
-export type Task = {
+export type TaskType = {
 	id: string
 	title: string
 	isDone: boolean
