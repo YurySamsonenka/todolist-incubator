@@ -1,9 +1,9 @@
-import { Todolist } from './Todolist';
-import { addTaskAC } from './model/tasks-reducer';
-import { TodolistType } from './app/App';
+import { Todolist } from './Todolist/Todolist';
+import { addTaskAC } from '../../model/tasks-reducer';
+import { TodolistType } from '../../../../app/App';
 import { useDispatch, useSelector } from 'react-redux';
 import Paper from '@mui/material/Paper';
-import { RootState } from './app/store';
+import { RootState } from '../../../../app/store';
 import Grid from '@mui/material/Grid2';
 
 const Todolists = () => {

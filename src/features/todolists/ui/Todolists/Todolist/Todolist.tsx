@@ -1,9 +1,9 @@
-import { TodolistType } from './app/App';
-import { AddItemForm } from './AddItemForm';
-import { FilterTasksButtons } from './FilterTasksButtons';
-import { Tasks } from './Tasks';
-import { TodolistTitle } from './TodolistTitle';
-import { addTaskAC } from './model/tasks-reducer';
+import { TodolistType } from '../../../../../app/App';
+import { AddItemForm } from '../../../../../common/components/AddItemForm/AddItemForm';
+import { FilterTasksButtons } from './FilterTasksButtons/FilterTasksButtons';
+import { Tasks } from './Tasks/Tasks';
+import { TodolistTitle } from './TodolistTitle/TodolistTitle';
+import { addTaskAC } from '../../../model/tasks-reducer';
 import { useDispatch } from 'react-redux';
 
 type Props = {

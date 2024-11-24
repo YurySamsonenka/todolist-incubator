@@ -1,8 +1,8 @@
 import List from '@mui/material/List';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from './app/store';
-import { TasksStateType, TodolistType } from './app/App';
-import { Task } from './Task';
+import { RootState } from '../../../../../../app/store';
+import { TasksStateType, TodolistType } from '../../../../../../app/App';
+import { Task } from './Task/Task';
 
 type Props = {
 	todolist: TodolistType
