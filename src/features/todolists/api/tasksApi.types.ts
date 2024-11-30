@@ -1,4 +1,4 @@
-import { FieldError } from './todolistsApi.types';
+import { FieldError } from '../../../common/types/types';
 
 export type GetTasksResponse = {
 	error: string | null
