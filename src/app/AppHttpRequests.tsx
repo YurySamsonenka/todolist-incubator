@@ -52,7 +52,7 @@ export const AppHttpRequests = () => {
 	};
 
 	const removeTaskHandler = (taskId: string, todolistId: string) => {
-		tasksApi.removeTask({ taskId, todolistId }).then(() => {
+		tasksApi.deleteTask({ taskId, todolistId }).then(() => {
 			setTasks({ ...tasks, [todolistId]: tasks[todolistId].filter(t => t.id !== taskId) });
 		});
 	};
@@ -138,7 +138,6 @@ export const AppHttpRequests = () => {
 	);
 };
 
-// Styles
 const todolist: React.CSSProperties = {
 	border: '1px solid black',
 	margin: '20px 0',

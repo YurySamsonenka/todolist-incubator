@@ -1,5 +1,3 @@
-import { FieldError } from '../../../common/types/types';
-
 export type GetTasksResponse = {
 	error: string | null
 	totalCount: number
@@ -19,15 +17,6 @@ export type DomainTask = {
 	addedDate: string
 }
 
-export type CreateTaskResponse = {
-	data: {
-		item: DomainTask
-	};
-	messages: string[];
-	fieldsErrors: FieldError[];
-	resultCode: number;
-}
-
 export type UpdateTaskModel = {
 	status: number
 	title: string
@@ -35,20 +24,4 @@ export type UpdateTaskModel = {
 	description: string
 	priority: number
 	startDate: string
-}
-
-export type UpdateTaskResponse = {
-	data: {
-		item: DomainTask
-	};
-	messages: string[];
-	fieldsErrors: FieldError[];
-	resultCode: number;
-}
-
-export type DeleteTaskResponse = {
-	data: {};
-	messages: string[];
-	fieldsErrors: FieldError[];
-	resultCode: number;
 }
