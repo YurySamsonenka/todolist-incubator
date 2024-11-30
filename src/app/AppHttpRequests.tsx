@@ -3,171 +3,53 @@ import React, { ChangeEvent, useEffect, useState } from 'react';
 import { AddItemForm } from '../common/components/AddItemForm/AddItemForm';
 import { EditableSpan } from '../common/components/EditableSpan/EditableSpan';
 import axios from 'axios';
-
-export type Todolist = {
-	id: string;
-	title: string;
-	addedDate: string;
-	order: number;
-}
-
-type FieldError = {
-	error: string
-	field: string
-}
-
-type CreateTodolistResponse = {
-	resultCode: number
-	messages: string[]
-	fieldsErrors: FieldError[]
-	data: {
-		item: Todolist
-	}
-}
-
-export type DeleteTodolistResponse = {
-	data: {};
-	messages: string[];
-	fieldsErrors: FieldError[];
-	resultCode: number;
-}
-
-export type UpdateTodolistResponse = {
-	data: {};
-	messages: string[];
-	fieldsErrors: FieldError[];
-	resultCode: number;
-}
-
-export type GetTasksResponse = {
-	error: string | null
-	totalCount: number
-	items: DomainTask[]
-}
-
-export type DomainTask = {
-	description: string
-	title: string
-	status: number
-	priority: number
-	startDate: string
-	deadline: string
-	id: string
-	todoListId: string
-	order: number
-	addedDate: string
-}
-
-export type CreateTaskResponse = {
-	data: {
-		item: DomainTask
-	};
-	messages: string[];
-	fieldsErrors: FieldError[];
-	resultCode: number;
-}
-
-export type UpdateTaskModel = {
-	status: number
-	title: string
-	deadline: string
-	description: string
-	priority: number
-	startDate: string
-}
-
-export type UpdateTaskResponse = {
-	data: {
-		item: DomainTask
-	};
-	messages: string[];
-	fieldsErrors: FieldError[];
-	resultCode: number;
-}
-
-export type DeleteTaskResponse = {
-	data: {};
-	messages: string[];
-	fieldsErrors: FieldError[];
-	resultCode: number;
-}
+import { Todolist } from '../features/todolists/api/todolistsApi.types';
+import { CreateTaskResponse, DeleteTaskResponse, DomainTask, GetTasksResponse, UpdateTaskModel, UpdateTaskResponse } from '../features/todolists/api/tasksApi.types';
+import { todolistApi } from '../features/todolists/api/todolistsApi';
 
 export const AppHttpRequests = () => {
 	const [todolists, setTodolists] = useState<Todolist[]>([]);
 	const [tasks, setTasks] = useState<{ [key: string]: DomainTask[] }>({});
 
 	useEffect(() => {
-		axios
-			.get<Todolist[]>('https://social-network.samuraijs.com/api/1.1/todo-lists',
-				{
-					headers: {
-						Authorization: 'Bearer 739928ab-5081-4771-b5b5-5b746606f445',
-					},
-				})
-			.then(res => {
-				const todolists = res.data;
-				setTodolists(todolists);
-				todolists.forEach(tl => {
-					axios
-						.get<GetTasksResponse>(`https://social-network.samuraijs.com/api/1.1/todo-lists/${tl.id}/tasks`,
-							{
-								headers: {
-									Authorization: 'Bearer 739928ab-5081-4771-b5b5-5b746606f445',
-									'API-KEY': '16843219-960c-45df-9528-8d8db3786499',
-								},
-							})
-						.then(res => {
-							setTasks((prevState)=> {
-								return {...prevState, [tl.id]: res.data.items}
-							} );
+		todolistApi.getTodolist().then(res => {
+			const todolists = res.data;
+			setTodolists(todolists);
+			todolists.forEach(tl => {
+				axios
+					.get<GetTasksResponse>(`https://social-network.samuraijs.com/api/1.1/todo-lists/${tl.id}/tasks`,
+						{
+							headers: {
+								Authorization: 'Bearer 2026887c-01d4-466b-bc2c-7397d8c89fb8',
+								'API-KEY': 'd9e3a3ee-9579-4622-9ab3-970dc7443157',
+							},
+						})
+					.then(res => {
+						setTasks((prevState) => {
+							return { ...prevState, [tl.id]: res.data.items };
 						});
-				});
+					});
 			});
+		});
 	}, []);
 
 	const createTodolistHandler = (title: string) => {
-		axios.post<CreateTodolistResponse>('https://social-network.samuraijs.com/api/1.1/todo-lists',
-			{ title },
-			{
-				headers: {
-					Authorization: 'Bearer 739928ab-5081-4771-b5b5-5b746606f445',
-					'API-KEY': '16843219-960c-45df-9528-8d8db3786499',
-				},
-			})
-			.then(res => {
-				const newTodolist = res.data.data.item;
-				setTodolists([newTodolist, ...todolists]);
-			});
+		todolistApi.createTodolist(title).then(res => {
+			const newTodolist = res.data.data.item;
+			setTodolists([newTodolist, ...todolists]);
+		});
 	};
 
 	const removeTodolistHandler = (id: string) => {
-		axios.delete<DeleteTodolistResponse>(`https://social-network.samuraijs.com/api/1.1/todo-lists/${id}`,
-			{
-				headers: {
-					Authorization: 'Bearer 739928ab-5081-4771-b5b5-5b746606f445',
-					'API-KEY': '16843219-960c-45df-9528-8d8db3786499',
-				},
-			})
-			.then(() => {
-				setTodolists(todolists.filter(tl => tl.id !== id));
-			});
+		todolistApi.removeTodolist(id).then(() => {
+			setTodolists(todolists.filter(tl => tl.id !== id));
+		});
 	};
 
 	const updateTodolistHandler = (id: string, title: string) => {
-		axios
-			.put<UpdateTodolistResponse>(
-				`https://social-network.samuraijs.com/api/1.1/todo-lists/${id}`,
-				{ title },
-				{
-					headers: {
-						Authorization: 'Bearer 739928ab-5081-4771-b5b5-5b746606f445',
-						'API-KEY': '16843219-960c-45df-9528-8d8db3786499',
-					},
-				},
-			)
-			.then(res => {
-				setTodolists(todolists.map(tl => tl.id === id ? { ...tl, title } : tl));
-			});
+		todolistApi.updateTodolist({ id, title }).then(res => {
+			setTodolists(todolists.map(tl => tl.id === id ? { ...tl, title } : tl));
+		});
 	};
 
 	const createTaskHandler = (title: string, todolistId: string) => {
@@ -175,8 +57,8 @@ export const AppHttpRequests = () => {
 			{ title },
 			{
 				headers: {
-					Authorization: 'Bearer 739928ab-5081-4771-b5b5-5b746606f445',
-					'API-KEY': '16843219-960c-45df-9528-8d8db3786499',
+					Authorization: 'Bearer 2026887c-01d4-466b-bc2c-7397d8c89fb8',
+					'API-KEY': 'd9e3a3ee-9579-4622-9ab3-970dc7443157',
 				},
 			})
 			.then(res => {
@@ -189,8 +71,8 @@ export const AppHttpRequests = () => {
 		axios.delete<DeleteTaskResponse>(`https://social-network.samuraijs.com/api/1.1/todo-lists/${todolistId}/tasks/${taskId}`,
 			{
 				headers: {
-					Authorization: 'Bearer 739928ab-5081-4771-b5b5-5b746606f445',
-					'API-KEY': '16843219-960c-45df-9528-8d8db3786499',
+					Authorization: 'Bearer 2026887c-01d4-466b-bc2c-7397d8c89fb8',
+					'API-KEY': 'd9e3a3ee-9579-4622-9ab3-970dc7443157',
 				},
 			})
 			.then(() => {
@@ -216,8 +98,8 @@ export const AppHttpRequests = () => {
 				model,
 				{
 					headers: {
-						Authorization: 'Bearer 739928ab-5081-4771-b5b5-5b746606f445',
-						'API-KEY': '16843219-960c-45df-9528-8d8db3786499',
+						Authorization: 'Bearer 2026887c-01d4-466b-bc2c-7397d8c89fb8',
+						'API-KEY': 'd9e3a3ee-9579-4622-9ab3-970dc7443157',
 					},
 				},
 			)
@@ -247,8 +129,8 @@ export const AppHttpRequests = () => {
 				model,
 				{
 					headers: {
-						Authorization: 'Bearer 739928ab-5081-4771-b5b5-5b746606f445',
-						'API-KEY': '16843219-960c-45df-9528-8d8db3786499',
+						Authorization: 'Bearer 2026887c-01d4-466b-bc2c-7397d8c89fb8',
+						'API-KEY': 'd9e3a3ee-9579-4622-9ab3-970dc7443157',
 					},
 				},
 			)
@@ -266,7 +148,6 @@ export const AppHttpRequests = () => {
 		<div style={{ margin: '20px' }}>
 			<AddItemForm addItem={createTodolistHandler} />
 
-			{/* Todolists */}
 			{todolists.map(tl => {
 				return (
 					<div key={tl.id} style={todolist}>
@@ -279,7 +160,6 @@ export const AppHttpRequests = () => {
 						</div>
 						<AddItemForm addItem={title => createTaskHandler(title, tl.id)} />
 
-						{/* Tasks */}
 						{!!tasks[tl.id] &&
 							tasks[tl.id].map((task: DomainTask) => {
 								return (
