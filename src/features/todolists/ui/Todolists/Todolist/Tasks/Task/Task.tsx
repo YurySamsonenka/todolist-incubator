@@ -1,5 +1,4 @@
 import Checkbox from '@mui/material/Checkbox';
-import { EditableSpan } from '../../../../../../../common/components/EditableSpan/EditableSpan';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ListItem from '@mui/material/ListItem';
@@ -7,7 +6,8 @@ import { TaskType, TodolistType } from '../../../../../../../app/App';
 import { changeTaskStatusAC, changeTaskTitleAC, removeTaskAC } from '../../../../../model/tasks-reducer';
 import { ChangeEvent } from 'react';
 import { getListItemSx } from './Task.styles';
-import { useAppDispatch } from '../../../../../../../common/hooks/useAppDispatch';
+import { useAppDispatch } from 'common/hooks/useAppDispatch';
+import { EditableSpan } from 'common/components/EditableSpan';
 
 type Props = {
 	task: TaskType

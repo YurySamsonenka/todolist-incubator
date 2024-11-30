@@ -1,8 +1,7 @@
 import List from '@mui/material/List';
-import { RootState } from '../../../../../../app/store';
-import { TasksStateType, TodolistType } from '../../../../../../app/App';
+import { TodolistType } from '../../../../../../app/App';
 import { Task } from './Task/Task';
-import { useAppSelector } from '../../../../../../common/hooks/useAppSelector';
+import { useAppSelector } from 'common/hooks/useAppSelector';
 import { selectTasks } from '../../../../model/tasksSelectors';
 
 type Props = {

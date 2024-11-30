@@ -1,9 +1,9 @@
-import { EditableSpan } from '../../../../../../common/components/EditableSpan/EditableSpan';
+import { EditableSpan } from 'common/components/EditableSpan/EditableSpan';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { TodolistType } from '../../../../../../app/App';
 import { changeTodolistTitleAC, removeTodolistAC } from '../../../../model/todolists-reducer';
-import { useAppDispatch } from '../../../../../../common/hooks/useAppDispatch';
+import { useAppDispatch } from 'common/hooks/useAppDispatch';
 
 type Props = {
 	todolist: TodolistType

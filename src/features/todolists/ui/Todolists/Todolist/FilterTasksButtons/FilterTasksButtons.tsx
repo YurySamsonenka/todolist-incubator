@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import { FilterValues, TodolistType } from '../../../../../../app/App';
 import { changeTodolistFilterAC } from '../../../../model/todolists-reducer';
 import { filterButtonsContainerSx } from './FilterTasksButtons.styles';
-import { useAppDispatch } from '../../../../../../common/hooks/useAppDispatch';
+import { useAppDispatch } from 'common/hooks/useAppDispatch';
 
 type Props = {
 	todolist: TodolistType
