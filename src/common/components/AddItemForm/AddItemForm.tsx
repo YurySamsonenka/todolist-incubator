@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import { ChangeEvent, KeyboardEvent, useState } from "react"
 import TextField from "@mui/material/TextField"
 import AddBoxIcon from "@mui/icons-material/AddBox"
 import IconButton from "@mui/material/IconButton"
@@ -20,23 +20,21 @@ export const AddItemForm = ({ addItem }: Props) => {
     }
   }
 
-  const changeItemHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const changeItemHandler = (event: ChangeEvent<HTMLInputElement>) => {
     setTitle(event.currentTarget.value)
   }
 
-  const addItemOnKeyUpHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
+  const addItemOnKeyUpHandler = (event: KeyboardEvent<HTMLInputElement>) => {
     setError(null)
     if (event.key === "Enter") {
       addItemHandler()
     }
   }
-
   return (
     <div>
       <TextField
         label="Enter a title"
         variant={"outlined"}
-        className={error ? "error" : ""}
         value={title}
         size={"small"}
         error={!!error}

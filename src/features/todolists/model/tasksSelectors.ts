@@ -1,4 +1,3 @@
 import { RootState } from "../../../app/store"
-import { TasksStateType } from "../../../app/App"
 
-export const selectTasks = (state: RootState): TasksStateType => state.tasks
+export const selectTasks = (state: RootState) => state.tasks

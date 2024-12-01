@@ -1,19 +1,19 @@
-import { Todolist } from "./Todolist/Todolist"
-import { addTaskAC } from "../../model/tasks-reducer"
 import Paper from "@mui/material/Paper"
-import Grid from "@mui/material/Grid2"
-import { useAppDispatch } from "common/hooks/useAppDispatch"
-import { useAppSelector } from "common/hooks/useAppSelector"
+import Grid from "@mui/material/Unstable_Grid2"
+import React, { useEffect } from "react"
+import { useAppDispatch, useAppSelector } from "common/hooks"
+import { fetchTodolistsTC } from "../../model/todolists-reducer"
 import { selectTodolists } from "../../model/todolistsSelectors"
+import { Todolist } from "./Todolist/Todolist"
 
-const Todolists = () => {
+export const Todolists = () => {
   const todolists = useAppSelector(selectTodolists)
 
   const dispatch = useAppDispatch()
 
-  const addTask = (title: string, todolistId: string) => {
-    dispatch(addTaskAC({ title, todolistId }))
-  }
+  useEffect(() => {
+    dispatch(fetchTodolistsTC())
+  }, [])
 
   return (
     <>
@@ -21,7 +21,7 @@ const Todolists = () => {
         return (
           <Grid key={tl.id}>
             <Paper sx={{ p: "0 20px 20px 20px" }}>
-              <Todolist key={tl.id} todolist={tl} addTask={addTask} />
+              <Todolist key={tl.id} todolist={tl} />
             </Paper>
           </Grid>
         )
@@ -29,5 +29,3 @@ const Todolists = () => {
     </>
   )
 }
-
-export default Todolists

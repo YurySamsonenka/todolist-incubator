@@ -1,20 +1,21 @@
-import React from "react"
-import Toolbar from "@mui/material/Toolbar"
-import IconButton from "@mui/material/IconButton"
 import MenuIcon from "@mui/icons-material/Menu"
-import { MenuButton } from "../MenuButton/MenuButton"
-import Switch from "@mui/material/Switch"
 import AppBar from "@mui/material/AppBar"
-import { getTheme } from "../../theme/theme"
+import IconButton from "@mui/material/IconButton"
+import Switch from "@mui/material/Switch"
+import Toolbar from "@mui/material/Toolbar"
+import React from "react"
 import { changeThemeAC } from "../../../app/app-reducer"
-import { useAppDispatch } from "../../hooks/useAppDispatch"
-import { useAppSelector } from "../../hooks/useAppSelector"
+import { selectThemeMode } from "../../../app/appSelectors"
+import { useAppDispatch, useAppSelector } from "common/hooks"
+import { getTheme } from "common/theme"
+import { MenuButton } from "common/components"
 
-const Header = () => {
-  const themeMode = useAppSelector((state) => state.app.themeMode)
-  const theme = getTheme(themeMode)
-
+export const Header = () => {
   const dispatch = useAppDispatch()
+
+  const themeMode = useAppSelector(selectThemeMode)
+
+  const theme = getTheme(themeMode)
 
   const changeModeHandler = () => {
     dispatch(changeThemeAC(themeMode === "light" ? "dark" : "light"))
@@ -36,5 +37,3 @@ const Header = () => {
     </AppBar>
   )
 }
-
-export default Header
