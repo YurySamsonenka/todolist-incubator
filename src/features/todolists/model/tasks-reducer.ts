@@ -1,4 +1,8 @@
+import { ResultCode } from "common/enums"
+import { handleServerAppError } from "common/utils/handleServerAppError"
+import { handleServerNetworkError } from "common/utils/handleServerNetworkError"
 import { Dispatch } from "redux"
+import { setAppStatusAC } from "../../../app/app-reducer"
 import { RootState } from "../../../app/store"
 import { tasksApi } from "../api/tasksApi"
 import { DomainTask, UpdateTaskDomainModel, UpdateTaskModel } from "../api/tasksApi.types"
@@ -92,22 +96,50 @@ export type UpdateTaskActionType = ReturnType<typeof updateTaskAC>
 
 // Thunks
 export const fetchTasksTC = (todolistId: string) => (dispatch: Dispatch) => {
-  tasksApi.getTasks(todolistId).then((res) => {
-    const tasks = res.data.items
-    dispatch(setTasksAC({ todolistId, tasks }))
-  })
+  dispatch(setAppStatusAC("loading"))
+  tasksApi
+    .getTasks(todolistId)
+    .then((res) => {
+      dispatch(setAppStatusAC("succeeded"))
+      dispatch(setTasksAC({ todolistId, tasks: res.data.items }))
+    })
+    .catch((error) => {
+      handleServerNetworkError(error, dispatch)
+    })
 }
 
 export const removeTaskTC = (arg: { taskId: string; todolistId: string }) => (dispatch: Dispatch) => {
-  tasksApi.deleteTask(arg).then((res) => {
-    dispatch(removeTaskAC(arg))
-  })
+  dispatch(setAppStatusAC("loading"))
+  tasksApi
+    .deleteTask(arg)
+    .then((res) => {
+      if (res.data.resultCode === ResultCode.Success) {
+        dispatch(setAppStatusAC("succeeded"))
+        dispatch(removeTaskAC(arg))
+      } else {
+        handleServerAppError(res.data, dispatch)
+      }
+    })
+    .catch((error) => {
+      handleServerNetworkError(error, dispatch)
+    })
 }
 
 export const addTaskTC = (arg: { title: string; todolistId: string }) => (dispatch: Dispatch) => {
-  tasksApi.createTask(arg).then((res) => {
-    dispatch(addTaskAC({ task: res.data.data.item }))
-  })
+  dispatch(setAppStatusAC("loading"))
+  tasksApi
+    .createTask(arg)
+    .then((res) => {
+      if (res.data.resultCode === ResultCode.Success) {
+        dispatch(setAppStatusAC("succeeded"))
+        dispatch(addTaskAC({ task: res.data.data.item }))
+      } else {
+        handleServerAppError(res.data, dispatch)
+      }
+    })
+    .catch((error) => {
+      handleServerNetworkError(error, dispatch)
+    })
 }
 
 export const updateTaskTC =
@@ -130,9 +162,20 @@ export const updateTaskTC =
         ...domainModel,
       }
 
-      tasksApi.updateTask({ taskId, todolistId, model }).then((res) => {
-        dispatch(updateTaskAC(arg))
-      })
+      dispatch(setAppStatusAC("loading"))
+      tasksApi
+        .updateTask({ taskId, todolistId, model })
+        .then((res) => {
+          if (res.data.resultCode === ResultCode.Success) {
+            dispatch(setAppStatusAC("succeeded"))
+            dispatch(updateTaskAC(arg))
+          } else {
+            handleServerAppError(res.data, dispatch)
+          }
+        })
+        .catch((error) => {
+          handleServerNetworkError(error, dispatch)
+        })
     }
   }
 
